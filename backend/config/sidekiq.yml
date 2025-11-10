@@ -1,0 +1,10 @@
+---
+:concurrency: <%= ENV.fetch("SIDEKIQ_CONCURRENCY", 5) %>
+:queues:
+  - default
+  - real_time_jobs
+  - mailers
+  - active_storage_analysis
+  - active_storage_purge
+  - low
+
