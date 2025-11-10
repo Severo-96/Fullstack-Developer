@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: /bin/sh -lc "rm -f tmp/pids/server.pid && bundle exec rails db:prepare && bundle exec rails server -b 0.0.0.0 -p 3000"
+    command: /bin/sh -lc "bundle install && rm -f tmp/pids/server.pid && bundle exec rails db:prepare && bundle exec rails server -b 0.0.0.0 -p 3000"
     env_file:
       - .env
     environment:
@@ -26,7 +26,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: /bin/sh -lc "bundle exec rails db:prepare && bundle exec sidekiq -C config/sidekiq.yml"
+    command: /bin/sh -lc "bundle install && bundle exec rails db:prepare && bundle exec sidekiq -C config/sidekiq.yml"
     env_file:
       - .env
     environment:
@@ -69,7 +69,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: /bin/sh -lc "bundle exec rails db:prepare && bundle exec rspec"
+    command: /bin/sh -lc "bundle install && bundle exec rails db:prepare && bundle exec rspec"
     env_file:
       - .env.test
     environment:

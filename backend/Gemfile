@@ -26,6 +26,9 @@ gem "jwt", "~> 2.9"
 # File processing for CSV and XLSX
 gem "roo", "~> 2.10"
 
+# Cross-Origin Resource Sharing
+gem "rack-cors"
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
