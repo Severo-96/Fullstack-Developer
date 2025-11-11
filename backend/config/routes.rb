@@ -12,10 +12,9 @@ Rails.application.routes.draw do
 
   resource :me, only: [:show, :update, :destroy], controller: 'me'
 
-  resources :users do
-    collection do
-      post :bulk_create
-    end
+  namespace :admin do
+    resources :users, only: [:index, :show, :create, :update, :destroy]
+    post 'users/bulk', to: 'users_bulk#create'
   end
 
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)

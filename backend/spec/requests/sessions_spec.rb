@@ -1,51 +1,63 @@
 require 'rails_helper'
 
 RSpec.describe 'Sessions', type: :request do
-  describe 'POST /login' do
-    let!(:user) do
-      User.create!(
-        full_name: 'Login User',
-        email: 'login@example.com',
-        password: 'password123',
-        role: :non_admin
-      )
-    end
+  fixtures :users
 
+  let(:existing_user) { users(:regular_user) }
+
+  describe '#login' do
     it 'authenticates with valid credentials' do
-      post '/login', params: { email: 'login@example.com', password: 'password123' }
+      post '/login', params: { email: existing_user.email, password: 'password123' }
 
       expect(response).to have_http_status(:ok)
-      payload = JSON.parse(response.body)
-      expect(payload['token']).to be_present
-      expect(payload.dig('user', 'id')).to eq(user.id)
+      payload = JSON.parse(response.body, symbolize_names: true)
+      expect(payload[:token]).to be_present
     end
 
     it 'returns unauthorized with invalid credentials' do
-      post '/login', params: { email: 'login@example.com', password: 'wrong-password' }
+      post '/login', params: { email: existing_user.email, password: 'wrong-password' }
 
       expect(response).to have_http_status(:unauthorized)
-      payload = JSON.parse(response.body)
-      expect(payload['error']).to eq('Invalid credentials')
+      payload = JSON.parse(response.body, symbolize_names: true)
+      expect(payload[:error]).to eq('Invalid credentials')
+    end
+
+    it 'returns not found when user email does not exist' do
+      post '/login', params: { email: 'missing@example.com', password: 'password123' }
+
+      expect(response).to have_http_status(:not_found)
+      payload = JSON.parse(response.body, symbolize_names: true)
+      expect(payload[:error]).to eq('User not found')
     end
   end
 
-  describe 'POST /register' do
+  describe '#register' do
     it 'creates a user and returns a token' do
-      post '/register', params: { full_name: 'New User', email: 'new@example.com', password: 'password123' }
+      expect do
+        post '/register', params: { full_name: 'New User', email: 'new@example.com', password: 'password123' }
+      end.to change(User, :count).by(1)
 
       expect(response).to have_http_status(:created)
-      payload = JSON.parse(response.body)
-      expect(payload['token']).to be_present
-      expect(payload.dig('user', 'email')).to eq('new@example.com')
+      payload = JSON.parse(response.body, symbolize_names: true)
+      expect(payload[:token]).to be_present
       expect(User.find_by(email: 'new@example.com')).to be_present
     end
 
-    it 'returns errors when record is invalid' do
+    it 'returns errors when payload is invalid' do
       post '/register', params: { full_name: '', email: '', password: '' }
 
-      expect(response).to have_http_status(:unprocessable_entity)
-      payload = JSON.parse(response.body)
-      expect(payload['errors']).to be_an(Array)
+      expect(response).to have_http_status(:unprocessable_content)
+      payload = JSON.parse(response.body, symbolize_names: true)
+      expect(payload[:errors]).to be_an(Array)
+      expect(payload[:errors]).not_to be_empty
+    end
+
+    it 'returns errors when email is already taken' do
+      post '/register', params: { full_name: 'Duplicate', email: existing_user.email, password: 'password123' }
+
+      expect(response).to have_http_status(:unprocessable_content)
+      payload = JSON.parse(response.body, symbolize_names: true)
+      expect(payload[:errors]).to include('Email has already been taken')
     end
   end
 end

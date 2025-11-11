@@ -1,16 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe TokenAuthenticationService do
+  fixtures :users
+
   let(:token) { 'valid-token' }
   let(:jwt_service) { instance_double(JwtService) }
-  let!(:admin_user) do
-    User.create!(
-      full_name: 'Admin User',
-      email: 'admin@example.com',
-      password: 'password123',
-      role: :admin
-    )
-  end
+  let(:admin_user) { users(:admin_user) }
 
   before do
     allow(JwtService).to receive(:new).and_return(jwt_service)
@@ -45,14 +40,7 @@ RSpec.describe TokenAuthenticationService do
     end
 
     context 'when require_admin is true' do
-      let!(:non_admin_user) do
-        User.create!(
-          full_name: 'Regular User',
-          email: 'user@example.com',
-          password: 'password123',
-          role: :non_admin
-        )
-      end
+      let(:non_admin_user) { users(:regular_user) }
 
       it 'returns the user if admin' do
         allow(jwt_service).to receive(:decode_token).with(token).and_return({ user_id: admin_user.id })

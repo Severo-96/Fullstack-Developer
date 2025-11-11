@@ -3,20 +3,9 @@ regular_user:
   email: regular@example.com
   role: non_admin
   password_digest: <%= BCrypt::Password.create("password123") %>
-  avatar_url:
 
 admin_user:
   full_name: "Admin User"
   email: admin@example.com
   role: admin
   password_digest: <%= BCrypt::Password.create("adminpassword") %>
-  avatar_url:
-
-unconfirmed_user:
-  full_name: "Pending User"
-  email: pending@example.com
-  role: non_admin
-  password_digest: <%= BCrypt::Password.create("pendingpass") %>
-  avatar_url: https://cdn.example.com/avatar/pending.png
-
-

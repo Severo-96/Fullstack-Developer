@@ -1,23 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe UsersCountChannel, type: :channel do
-  let!(:admin_user) do
-    User.create!(
-      full_name: 'Admin User',
-      email: 'admin@example.com',
-      password: 'password123',
-      role: :admin
-    )
-  end
+  fixtures :users
 
-  let!(:non_admin_user) do
-    User.create!(
-      full_name: 'Regular User',
-      email: 'user@example.com',
-      password: 'password123',
-      role: :non_admin
-    )
-  end
+  let(:admin_user) { users(:admin_user) }
+  let(:non_admin_user) { users(:regular_user) }
 
   it 'rejects non-admin users' do
     stub_connection current_user: non_admin_user

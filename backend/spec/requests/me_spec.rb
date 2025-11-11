@@ -1,38 +1,48 @@
 require 'rails_helper'
 
 RSpec.describe 'Me', type: :request do
-  let!(:user) do
-    User.create!(
-      full_name: 'Self User',
-      email: 'self@example.com',
-      password: 'password123',
-      role: :non_admin
-    )
-  end
+  fixtures :users
 
+  let(:user) { users(:regular_user) }
   let(:token) { JwtService.new.generate_token(user) }
   let(:headers) { { 'Authorization' => "Bearer #{token}" } }
 
-  describe 'GET /me' do
-    it 'returns the current user' do
+  describe '#show' do
+    it 'returns the current user profile' do
       get '/me', headers: headers
 
       expect(response).to have_http_status(:ok)
-      payload = JSON.parse(response.body)
-      expect(payload['email']).to eq('self@example.com')
+      payload = JSON.parse(response.body, symbolize_names: true)
+      expect(payload[:email]).to eq(user.email)
+      expect(payload[:full_name]).to eq(user.full_name)
     end
   end
 
-  describe 'PUT /me' do
+  describe '#update' do
     it 'updates the current user profile' do
-      put '/me', params: { user: { full_name: 'Updated Name' } }, headers: headers
+      put '/me',
+          params: { user: { full_name: 'Updated Name' } },
+          headers: headers
 
       expect(response).to have_http_status(:ok)
+      payload = JSON.parse(response.body, symbolize_names: true)
+      expect(payload[:full_name]).to eq('Updated Name')
       expect(user.reload.full_name).to eq('Updated Name')
+    end
+
+    it 'returns validation errors when payload is invalid' do
+      put '/me',
+          params: { user: { email: 'invalid-email' } },
+          headers: headers
+
+      expect(response).to have_http_status(:unprocessable_content)
+      payload = JSON.parse(response.body, symbolize_names: true)
+      expect(payload[:error]).to eq('Failed to process user')
+      expect(payload[:details]).to be_present
     end
   end
 
-  describe 'DELETE /me' do
+  describe '#destroy' do
     it 'destroys the current user' do
       expect do
         delete '/me', headers: headers
@@ -42,10 +52,18 @@ RSpec.describe 'Me', type: :request do
     end
   end
 
-  it 'returns unauthorized without a token' do
-    get '/me'
+  describe 'authentication' do
+    it 'returns unauthorized without a token' do
+      get '/me'
 
-    expect(response).to have_http_status(:unauthorized)
+      expect(response).to have_http_status(:unauthorized)
+    end
+
+    it 'returns unauthorized with invalid token' do
+      get '/me', headers: { 'Authorization' => 'Bearer invalid-token' }
+
+      expect(response).to have_http_status(:unauthorized)
+    end
   end
 end
 

@@ -3,14 +3,9 @@ require 'rails_helper'
 RSpec.describe UserBulkImportJob, type: :job do
   include ActiveJob::TestHelper
 
-  let!(:admin_user) do
-    User.create!(
-      full_name: 'Admin User',
-      email: 'admin@example.com',
-      password: 'password123',
-      role: :admin
-    )
-  end
+  fixtures :users
+
+  let(:admin_user) { users(:admin_user) }
 
   let(:csv_content) do
     <<~CSV

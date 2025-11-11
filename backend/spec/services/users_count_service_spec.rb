@@ -2,12 +2,7 @@ require 'rails_helper'
 
 RSpec.describe UsersCountService do
   describe '.snapshot' do
-    before { User.delete_all }
-
     it 'returns the total and role counts with timestamp' do
-      User.create!(full_name: 'Admin', email: 'admin@example.com', password: 'password123', role: :admin)
-      User.create!(full_name: 'User', email: 'user@example.com', password: 'password123', role: :non_admin)
-
       snapshot = described_class.snapshot
 
       expect(snapshot[:total]).to eq(2)
