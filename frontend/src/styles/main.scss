@@ -1,0 +1,146 @@
+@import 'bootstrap/scss/bootstrap';
+
+body {
+  background-color: #f7f8fa;
+  min-height: 100vh;
+}
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.avatar-placeholder,
+.avatar-placeholder-lg {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(13, 110, 253, 0.1);
+  color: #0d6efd;
+  font-weight: 600;
+}
+
+.avatar-placeholder {
+  width: 48px;
+  height: 48px;
+  font-size: 1.25rem;
+}
+
+.avatar-placeholder-lg {
+  width: 96px;
+  height: 96px;
+  font-size: 2.5rem;
+}
+
+.register-avatar-preview {
+  width: 128px;
+  height: 128px;
+  object-fit: cover;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.card {
+  border-radius: 1rem;
+}
+
+.avatar-edit-wrapper {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.avatar-edit-wrapper img {
+  transition: transform 0.2s ease;
+}
+
+.avatar-edit-wrapper:hover img {
+  transform: scale(1.02);
+}
+
+.avatar-edit-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.55);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  padding: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.avatar-edit-wrapper:hover .avatar-edit-overlay,
+.avatar-edit-wrapper:focus-visible .avatar-edit-overlay {
+  opacity: 1;
+}
+
+.profile-avatar-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 1rem;
+}
+
+.profile-avatar-modal {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+}
+
+.profile-editor-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  @include media-breakpoint-up(lg) {
+    flex-direction: row;
+  }
+}
+
+.profile-editor-content {
+  flex: 1 1 100%;
+
+  @include media-breakpoint-up(lg) {
+    flex: 0 0 60%;
+    max-width: 60%;
+  }
+}
+
+.profile-editor-sidebar {
+  flex: 1 1 100%;
+  text-align: center;
+
+  @include media-breakpoint-up(lg) {
+    flex: 0 0 40%;
+    max-width: 40%;
+  }
+}
+
+.profile-editor-actions {
+  padding-top: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  @include media-breakpoint-up(lg) {
+    max-width: 60%;
+  }
+}
+
