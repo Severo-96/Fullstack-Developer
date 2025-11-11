@@ -82,8 +82,10 @@ export async function request<T>(
 
   if (!response.ok) {
     const message =
-      (payload && extractErrorMessage(payload)) ||
-      translateMessage(response.statusText);
+      response.status >= 500
+        ? 'Erro de servidor, tente novamente mais tarde.'
+        : (payload && extractErrorMessage(payload)) ||
+          translateMessage(response.statusText);
     throw new ApiError(message, response.status, payload);
   }
 

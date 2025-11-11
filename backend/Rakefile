@@ -4,3 +4,22 @@
 require_relative "config/application"
 
 Rails.application.load_tasks
+
+namespace :db do
+  desc 'Reseta o banco de dados e carrega seeds padrão'
+  task reset_with_seeds: :environment do
+    puts 'Dropping database...'
+    Rake::Task['db:drop'].invoke
+
+    puts 'Creating database...'
+    Rake::Task['db:create'].invoke
+
+    puts 'Migrating database...'
+    Rake::Task['db:migrate'].invoke
+
+    puts 'Loading seeds...'
+    Rake::Task['db:seed'].invoke
+
+    puts 'Banco restaurado com seeds padrão.'
+  end
+end

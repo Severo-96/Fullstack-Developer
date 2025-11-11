@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: /bin/sh -lc "bundle install && rm -f tmp/pids/server.pid && bundle exec rails db:prepare && bundle exec rails server -b 0.0.0.0 -p 3000"
+    command: /bin/sh -lc "bundle install && rm -f tmp/pids/server.pid && bundle exec rails db:prepare && bundle exec rails db:seed && bundle exec rails server -b 0.0.0.0 -p 3000"
     env_file:
       - .env
     environment:
@@ -70,6 +70,8 @@ services:
       context: .
       dockerfile: Dockerfile
     command: /bin/sh -lc "bundle install && bundle exec rails db:prepare && bundle exec rspec"
+    profiles:
+      - test
     env_file:
       - .env.test
     environment:
