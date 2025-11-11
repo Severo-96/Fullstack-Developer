@@ -4,14 +4,14 @@ class MeController < ApplicationController
   # GET /me
   def show
     user = find_current_user
-    render json: user.as_json(methods: :avatar_image_url), status: :ok
+    render json: UserSerializer.new(user).as_json, status: :ok
   end
 
   # PUT /me
   def update
     user = find_current_user
     user.update!(user_params.compact_blank)
-    render json: user.as_json(methods: :avatar_image_url), status: :ok
+    render json: UserSerializer.new(user).as_json, status: :ok
   end
 
   # DELETE /me

@@ -7,7 +7,7 @@ module Admin
       pagy, users = pagy(User.order(created_at: :desc), items: per_page_param)
 
       render json: {
-        users: users.as_json(methods: :avatar_image_url),
+        users: users.map { |user| UserSerializer.new(user).as_json },
         users_count: User.count_by_role,
         pagination: {
           page: pagy.page,
@@ -21,20 +21,20 @@ module Admin
     # GET /admin/users/:id
     def show
       user = find_user
-      render json: user.as_json(methods: :avatar_image_url), status: :ok
+      render json: UserSerializer.new(user).as_json, status: :ok
     end
 
     # POST /admin/users
     def create
       user = User.create!(user_params)
-      render json: user.as_json(methods: :avatar_image_url), status: :created
+      render json: UserSerializer.new(user).as_json, status: :created
     end
 
     # PUT /admin/users/:id
     def update
       user = find_user
       user.update!(user_params.compact_blank)
-      render json: user.as_json(methods: :avatar_image_url), status: :ok
+      render json: UserSerializer.new(user).as_json, status: :ok
     end
 
     # DELETE /admin/users/:id
