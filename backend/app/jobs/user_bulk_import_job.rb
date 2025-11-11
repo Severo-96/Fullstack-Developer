@@ -28,7 +28,7 @@ class UserBulkImportJob < ApplicationJob
         processed: @processed,
         total: total,
         row_data: row,
-        error: e.message
+        error: error_message(e)
       )
       Rails.logger.error("Bulk import row failed: #{e.message}")
     end
@@ -93,8 +93,16 @@ class UserBulkImportJob < ApplicationJob
   def register_error(row, exception)
     @errors << {
       row: row,
-      error: exception.message
+      error: error_message(exception)
     }
+  end
+
+  def error_message(exception)
+    if exception.respond_to?(:record) && exception.record&.errors.present?
+      exception.record.errors.full_messages
+    else
+      Array(exception.message)
+    end
   end
 end
 

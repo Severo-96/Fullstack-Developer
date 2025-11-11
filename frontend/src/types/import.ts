@@ -15,7 +15,7 @@ export interface BulkImportMessage {
   total?: number;
   processed?: number;
   failed?: number;
-  errors?: Array<{ row: Record<string, unknown>; error: string }>;
+  errors?: Array<{ row: Record<string, unknown>; error: string | string[] }>;
   row_data?: Record<string, unknown>;
   error?: string;
 }

@@ -1,7 +1,7 @@
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 
-const ERROR_TRANSLATIONS: Record<string, string> = {
+export const ERROR_TRANSLATIONS: Record<string, string> = {
   'Failed to process user': 'Falha ao processar usuário',
   'User not found': 'Usuário não encontrado',
   'Invalid credentials': 'Credenciais inválidas',
@@ -14,6 +14,7 @@ const ERROR_TRANSLATIONS: Record<string, string> = {
   "Full name can't be blank": 'Nome completo é obrigatório',
   "Email can't be blank": 'E-mail é obrigatório',
   'Email is invalid': 'E-mail inválido',
+  'Invalid email': 'E-mail inválido',
   "Password can't be blank": 'Senha é obrigatória',
   'Password is too short (minimum is 6 characters)':
     'Senha muito curta (mínimo de 6 caracteres)',
@@ -159,7 +160,7 @@ function stripGenericPrefixes(message: string): string {
   return message.replace(/^Validation failed:\s*/i, '').trim();
 }
 
-function translateMessage(message: string): string {
+export function translateMessage(message: string): string {
   const trimmed = message.trim();
   return ERROR_TRANSLATIONS[trimmed] ?? trimmed;
 }

@@ -48,7 +48,7 @@ describe('BulkImportProgress', () => {
     expect(screen.getByText('Com falha')).toBeInTheDocument();
     expect(screen.getByText('1')).toBeInTheDocument();
     expect(screen.getByText(/Linhas com falha/)).toBeInTheDocument();
-    expect(screen.getByText(/Invalid email/)).toBeInTheDocument();
+    expect(screen.getByText(/E-mail inválido/)).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: /limpar/i }));
     expect(handleReset).toHaveBeenCalled();

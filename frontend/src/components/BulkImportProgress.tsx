@@ -1,4 +1,4 @@
-import type { BulkImportMessage } from '@/types/import';
+import { translateMessage } from '@/api/client';
 
 export interface BulkImportState {
   status: 'idle' | 'queued' | 'processing' | 'finished' | 'failed';
@@ -79,12 +79,20 @@ const BulkImportProgress = ({ state, onReset }: BulkImportProgressProps) => {
           <div className="alert alert-warning mt-3" role="alert">
             <h6 className="alert-heading">Linhas com falha ({state.errors.length})</h6>
             <ul className="small mb-0">
-              {state.errors.map((error, index) => (
-                <li key={`${index}-${error.error}`}>
-                  <strong>{error.error}:</strong>{' '}
-                  <code>{JSON.stringify(error.row)}</code>
-                </li>
-              ))}
+              {state.errors.map((error, index) => {
+                const messages = normalizeErrorMessages(error.error);
+                return (
+                  <li key={`${index}-${messages.join('|')}-${JSON.stringify(error.row)}`}>
+                    <strong>{messages.join(' • ')}</strong>
+                    {error.row && (
+                      <>
+                        {': '}
+                        <code>{JSON.stringify(error.row)}</code>
+                      </>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </div>
         )}
@@ -94,4 +102,20 @@ const BulkImportProgress = ({ state, onReset }: BulkImportProgressProps) => {
 };
 
 export default BulkImportProgress;
+
+type BulkImportErrorEntry = NonNullable<BulkImportState['errors']>[number];
+
+function normalizeErrorMessages(error: BulkImportErrorEntry['error']): string[] {
+  if (!error) return ['Erro desconhecido'];
+
+  const base = Array.isArray(error) ? error : [error];
+  const translated = base
+    .map((message) => translateMessage(
+      typeof message === 'string' ? message : String(message)
+    ))
+    .map((message) => message.trim())
+    .filter((message) => message.length > 0);
+
+  return translated.length > 0 ? translated : ['Erro desconhecido'];
+}
 
