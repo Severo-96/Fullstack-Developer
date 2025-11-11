@@ -1,3 +1,6 @@
+# Project Setup
+See the project setup & usage guide in [`DOCS.md`](./DOCS.md).
+
 # Fullstack Developer Test
 
 - Check this readme.md
