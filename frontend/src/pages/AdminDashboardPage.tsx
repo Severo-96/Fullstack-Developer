@@ -350,7 +350,19 @@ const AdminDashboardPage = () => {
       <div className="card shadow-sm border-0">
         <div className="card-body">
           <div className="d-flex justify-content-between align-items-center mb-3">
-            <h2 className="h5 mb-0">Todos os usuários</h2>
+            <div className="d-flex align-items-center gap-3">
+              <h2 className="h5 mb-0">Todos os usuários</h2>
+              <button
+                type="button"
+                className="btn btn-outline-primary btn-sm"
+                onClick={() => {
+                  void loadUsers({ suppressLoading: true });
+                }}
+                title="Atualizar lista de usuários"
+              >
+                Atualizar lista
+              </button>
+            </div>
             <span className="badge bg-light text-dark border">
               {pagination?.totalCount ?? counts?.total ?? users.length} no total
             </span>
