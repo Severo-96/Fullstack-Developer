@@ -82,7 +82,7 @@ const AdminDashboardPage = () => {
         }
       } catch (exception) {
         const message =
-          exception instanceof Error ? exception.message : 'Unable to load users';
+          exception instanceof Error ? exception.message : 'Não foi possível carregar os usuários';
         setError(message);
         if (options?.suppressLoading) {
           console.error(message, exception);
@@ -166,7 +166,7 @@ const AdminDashboardPage = () => {
   };
 
   const handleDelete = async (target: User) => {
-    if (!window.confirm(`Delete ${target.full_name}?`)) {
+    if (!window.confirm(`Excluir ${target.full_name}?`)) {
       return;
     }
 
@@ -178,7 +178,7 @@ const AdminDashboardPage = () => {
       alert(
         exception instanceof Error
           ? exception.message
-          : 'Unable to delete user'
+          : 'Não foi possível excluir o usuário'
       );
     }
   };
@@ -203,7 +203,7 @@ const AdminDashboardPage = () => {
       alert(
         exception instanceof Error
           ? exception.message
-          : 'Unable to toggle role'
+          : 'Não foi possível alterar a função'
       );
     }
   };
@@ -215,12 +215,12 @@ const AdminDashboardPage = () => {
 
   const handleBulkImport = async () => {
     if (!importFile) {
-      alert('Please select a CSV or spreadsheet file to import.');
+      alert('Selecione um arquivo CSV ou planilha para importar.');
       return;
     }
 
     if (!token) {
-      alert('Missing authentication token.');
+      alert('Token de autenticação não encontrado.');
       return;
     }
 
@@ -230,7 +230,7 @@ const AdminDashboardPage = () => {
       total: 0,
       failed: 0,
       errors: [],
-      message: 'Queued for processing'
+      message: 'Na fila para processamento'
     });
 
     try {
@@ -268,7 +268,7 @@ const AdminDashboardPage = () => {
         message:
           exception instanceof Error
             ? exception.message
-            : 'Bulk import failed to start'
+            : 'Não foi possível iniciar a importação em massa'
       });
     }
   };
@@ -281,7 +281,7 @@ const AdminDashboardPage = () => {
   };
 
   if (loading) {
-    return <LoadingState message="Loading admin dashboard..." />;
+    return <LoadingState message="Carregando painel administrativo..." />;
   }
 
   if (error) {
@@ -296,9 +296,9 @@ const AdminDashboardPage = () => {
     <div className="admin-dashboard">
       <div className="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
         <div>
-          <h1 className="h3 mb-1">User Administration</h1>
+          <h1 className="h3 mb-1">Administração de usuários</h1>
           <p className="text-muted mb-0">
-            Manage all users, permissions and bulk imports
+            Gerencie todos os usuários, permissões e importações em massa
           </p>
         </div>
         <div className="d-flex gap-2">
@@ -307,7 +307,7 @@ const AdminDashboardPage = () => {
             className="btn btn-primary"
             onClick={() => navigate('/admin/users/new')}
           >
-            Create user
+            Criar usuário
           </button>
         </div>
       </div>
@@ -318,9 +318,9 @@ const AdminDashboardPage = () => {
         <div className="card-body">
           <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
             <div>
-              <h2 className="h5 mb-1">Bulk import</h2>
+              <h2 className="h5 mb-1">Importação em massa</h2>
               <p className="text-muted mb-0">
-                Upload CSV or Excel spreadsheets to create users in batch
+                Envie planilhas CSV ou Excel para criar usuários em lote
               </p>
             </div>
             <div className="d-flex gap-2 align-items-center">
@@ -336,7 +336,7 @@ const AdminDashboardPage = () => {
                 onClick={handleBulkImport}
                 disabled={!importFile}
               >
-                Import
+                Importar
               </button>
             </div>
           </div>
@@ -350,9 +350,9 @@ const AdminDashboardPage = () => {
       <div className="card shadow-sm border-0">
         <div className="card-body">
           <div className="d-flex justify-content-between align-items-center mb-3">
-            <h2 className="h5 mb-0">All users</h2>
+            <h2 className="h5 mb-0">Todos os usuários</h2>
             <span className="badge bg-light text-dark border">
-              {pagination?.totalCount ?? counts?.total ?? users.length} total
+              {pagination?.totalCount ?? counts?.total ?? users.length} no total
             </span>
           </div>
           <UserTable
@@ -373,7 +373,7 @@ const AdminDashboardPage = () => {
           {pagination && (
             <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mt-3">
               <div className="d-flex align-items-center gap-2">
-                <span className="text-muted small">Rows per page:</span>
+                <span className="text-muted small">Linhas por página:</span>
                 <select
                   className="form-select form-select-sm"
                   style={{ width: 'auto' }}
@@ -390,21 +390,21 @@ const AdminDashboardPage = () => {
               <div className="d-flex flex-column flex-sm-row align-items-sm-center gap-2">
                 {pagination.totalCount > 0 && (
                   <span className="text-muted small">
-                    Showing {pageStart}-{pageEnd} of {pagination.totalCount}
+                    Mostrando {pageStart}-{pageEnd} de {pagination.totalCount}
                   </span>
                 )}
                 <div className="d-flex align-items-center gap-2">
                   <span className="text-muted small">
-                    Page {currentPageDisplay} of {effectiveTotalPages}
+                    Página {currentPageDisplay} de {effectiveTotalPages}
                   </span>
-                  <div className="btn-group" role="group" aria-label="Pagination controls">
+                  <div className="btn-group" role="group" aria-label="Controles de paginação">
                     <button
                       type="button"
                       className="btn btn-outline-secondary btn-sm"
                       onClick={() => handlePageChange(currentPageDisplay - 1)}
                       disabled={currentPageDisplay <= 1}
                     >
-                      Previous
+                      Anterior
                     </button>
                     <button
                       type="button"
@@ -415,7 +415,7 @@ const AdminDashboardPage = () => {
                         currentPageDisplay >= effectiveTotalPages
                       }
                     >
-                      Next
+                      Próxima
                     </button>
                   </div>
                 </div>
@@ -432,7 +432,7 @@ const AdminDashboardPage = () => {
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Confirm role change</h5>
+                <h5 className="modal-title">Confirmar alteração de função</h5>
                 <button
                   type="button"
                   className="btn-close"
@@ -442,7 +442,7 @@ const AdminDashboardPage = () => {
               </div>
               <div className="modal-body">
                 <p className="mb-0">
-                  Are you sure you want to change <strong>{pendingRoleChange.user.full_name}</strong>'s role to <strong>{pendingRoleChange.nextRole === 'admin' ? 'Admin' : 'User'}</strong>?
+                  Tem certeza de que deseja alterar a função de <strong>{pendingRoleChange.user.full_name}</strong> para <strong>{pendingRoleChange.nextRole === 'admin' ? 'Administrador' : 'Usuário'}</strong>?
                 </p>
               </div>
               <div className="modal-footer">
@@ -451,7 +451,7 @@ const AdminDashboardPage = () => {
                   className="btn btn-outline-secondary"
                   onClick={() => setPendingRoleChange(null)}
                 >
-                  Cancel
+                  Cancelar
                 </button>
                 <button
                   type="button"
@@ -466,7 +466,7 @@ const AdminDashboardPage = () => {
                     setPendingRoleChange(null);
                   }}
                 >
-                  Confirm
+                  Confirmar
                 </button>
               </div>
             </div>

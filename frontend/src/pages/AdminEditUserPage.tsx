@@ -25,7 +25,7 @@ const AdminEditUserPage = () => {
         setError(
           exception instanceof Error
             ? exception.message
-            : 'Unable to load user details'
+            : 'Não foi possível carregar os detalhes do usuário'
         );
       } finally {
         setLoading(false);
@@ -56,13 +56,13 @@ const AdminEditUserPage = () => {
   };
 
   if (loading) {
-    return <LoadingState message="Loading user..." />;
+    return <LoadingState message="Carregando usuário..." />;
   }
 
   if (error || !user) {
     return (
       <div className="alert alert-danger" role="alert">
-        {error || 'User not found.'}
+        {error || 'Usuário não encontrado.'}
       </div>
     );
   }
@@ -70,20 +70,20 @@ const AdminEditUserPage = () => {
   return (
     <AccountForm
       mode="edit"
-      title={`Edit ${user.full_name}`}
-      subtitle="Update account details and permissions for this user."
+      title={`Editar ${user.full_name}`}
+      subtitle="Atualize os dados e as permissões deste usuário."
       initialValues={{
         fullName: user.full_name,
         email: user.email,
         avatarUrl: user.avatar_image_url,
         role: user.role
       }}
-      submitLabel="Save changes"
-      pendingLabel="Saving..."
+      submitLabel="Salvar alterações"
+      pendingLabel="Salvando..."
       enableRoleSelection
       onSubmit={handleSubmit}
       backButton={{
-        label: 'Back to dashboard',
+        label: 'Voltar para o painel',
         onClick: () => navigate('/admin')
       }}
     />

@@ -18,7 +18,7 @@ const RegisterPage = () => {
     role: _role
   }: AccountFormSubmitValues) => {
     if (!password) {
-      throw new Error('Password is required');
+      throw new Error('A senha é obrigatória');
     }
 
     const currentUser = await register({
@@ -34,15 +34,15 @@ const RegisterPage = () => {
   return (
     <AccountForm
       mode="register"
-      title="Join Umanni Users"
-      subtitle="Build your profile and collaborate with your team"
+      title="Junte-se aos Usuários Umanni"
+      subtitle="Crie seu perfil e colabore com sua equipe"
       initialValues={{ fullName: '', email: '', avatarUrl: null }}
-      submitLabel="Create account"
-      pendingLabel="Creating account..."
+      submitLabel="Criar conta"
+      pendingLabel="Criando conta..."
       onSubmit={handleSubmit}
       footerLeft={
         <span>
-          Already have an account? <Link to="/login">Sign in</Link>
+          Já possui uma conta? <Link to="/login">Entrar</Link>
         </span>
       }
     />

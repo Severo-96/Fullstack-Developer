@@ -109,20 +109,20 @@ const AccountForm = ({
   }, [mode, fullName, email, password, confirmPassword, avatarFile, initialFullName, initialEmail, enableRoleSelection, role, initialRole]);
 
   const validate = () => {
-    if (!isPresent(fullName)) return 'Full name is required';
-    if (!isValidEmail(email)) return 'A valid email address is required';
+    if (!isPresent(fullName)) return 'Nome completo é obrigatório';
+    if (!isValidEmail(email)) return 'É necessário informar um e-mail válido';
 
     if (mode === 'register') {
-      if (!isStrongPassword(password)) return 'Password must contain at least 6 characters';
-      if (!isPresent(confirmPassword)) return 'Please confirm your password';
+      if (!isStrongPassword(password)) return 'A senha deve conter pelo menos 6 caracteres';
+      if (!isPresent(confirmPassword)) return 'Confirme sua senha';
     } else if (password && !isStrongPassword(password)) {
-      return 'Password must contain at least 6 characters';
+      return 'A senha deve conter pelo menos 6 caracteres';
     }
 
-    if (password !== confirmPassword) return 'Passwords do not match';
+    if (password !== confirmPassword) return 'As senhas não coincidem';
 
     if (enableRoleSelection && !role) {
-      return 'Role is required';
+      return 'Função é obrigatória';
     }
 
     return null;
@@ -183,7 +183,7 @@ const AccountForm = ({
       setError(
         exception instanceof Error
           ? exception.message
-          : 'Unable to save changes'
+          : 'Não foi possível salvar as alterações'
       );
     } finally {
       setSubmitting(false);
@@ -198,7 +198,7 @@ const AccountForm = ({
           className="btn btn-outline-secondary"
           onClick={backButton.onClick}
         >
-          {backButton.label ?? 'Back'}
+          {backButton.label ?? 'Voltar'}
         </button>
       );
     }
@@ -229,7 +229,7 @@ const AccountForm = ({
 
                   <div className="mb-3">
                     <label htmlFor="account-form-full-name" className="form-label">
-                      Full name
+                      Nome completo
                     </label>
                     <input
                       id="account-form-full-name"
@@ -243,7 +243,7 @@ const AccountForm = ({
 
                   <div className="mb-3">
                     <label htmlFor="account-form-email" className="form-label">
-                      Email
+                      E-mail
                     </label>
                     <input
                       id="account-form-email"
@@ -259,7 +259,7 @@ const AccountForm = ({
                   {enableRoleSelection && (
                     <div className="mb-3">
                       <label htmlFor="account-form-role" className="form-label">
-                        Role
+                        Função
                       </label>
                       <select
                         id="account-form-role"
@@ -267,15 +267,15 @@ const AccountForm = ({
                         value={role}
                         onChange={(event) => setRole(event.target.value as UserRole)}
                       >
-                        <option value="admin">Admin</option>
-                        <option value="non_admin">User</option>
+                        <option value="admin">Administrador</option>
+                        <option value="non_admin">Usuário</option>
                       </select>
                     </div>
                   )}
 
                   <div className="mb-3">
                     <label htmlFor="account-form-password" className="form-label">
-                      {mode === 'register' ? 'Password' : 'New password'}
+                      {mode === 'register' ? 'Senha' : 'Nova senha'}
                     </label>
                     <input
                       id="account-form-password"
@@ -285,14 +285,14 @@ const AccountForm = ({
                       onChange={(event) => setPassword(event.target.value)}
                       autoComplete="new-password"
                       minLength={6}
-                      placeholder={mode === 'edit' ? 'Leave blank to keep current password' : undefined}
+                      placeholder={mode === 'edit' ? 'Deixe em branco para manter a senha atual' : undefined}
                       required={mode === 'register'}
                     />
                   </div>
 
                   <div className="mb-3">
                     <label htmlFor="account-form-password-confirm" className="form-label">
-                      Confirm password
+                      Confirmar senha
                     </label>
                     <input
                       id="account-form-password-confirm"
@@ -309,7 +309,7 @@ const AccountForm = ({
                 </div>
 
                 <div className="profile-editor-sidebar">
-                  <h2 className="h5 mb-3">Profile photo</h2>
+                  <h2 className="h5 mb-3">Foto de perfil</h2>
                   <div
                     className="avatar-edit-wrapper"
                     role="button"
@@ -324,11 +324,11 @@ const AccountForm = ({
                   >
                     <img
                       src={avatarPreviewUrl}
-                      alt={fullName || 'User avatar'}
+                      alt={fullName || 'Avatar do usuário'}
                       className="rounded-circle border shadow-sm register-avatar-preview"
                     />
                     <div className="avatar-edit-overlay">
-                      <span>Click to upload a photo</span>
+                      <span>Clique para enviar uma foto</span>
                     </div>
                   </div>
                 </div>
@@ -352,9 +352,9 @@ const AccountForm = ({
       {showAvatarModal && (
         <div className="profile-avatar-modal-backdrop" role="dialog" aria-modal="true">
           <div className="profile-avatar-modal">
-            <h2 className="h5 mb-3">Upload a profile photo</h2>
+            <h2 className="h5 mb-3">Enviar foto de perfil</h2>
             <p className="text-muted mb-3">
-              Select an image from your device. You can change it later at any time.
+              Selecione uma imagem do seu dispositivo. Você pode alterá-la a qualquer momento.
             </p>
 
             <input
@@ -365,9 +365,24 @@ const AccountForm = ({
               onChange={handleAvatarFileChange}
             />
 
-            <div className="d-flex justify-content-end gap-2 mt-4">
+            <div className="d-flex justify-content-between gap-2 mt-4">
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
+                onClick={() => {
+                  if (avatarObjectUrlRef.current) {
+                    URL.revokeObjectURL(avatarObjectUrlRef.current);
+                    avatarObjectUrlRef.current = null;
+                  }
+                  setAvatarFile(null);
+                  setAvatarPreviewUrl(normalizedAvatarUrl);
+                  closeAvatarModal();
+                }}
+              >
+                Voltar
+              </button>
               <button type="button" className="btn btn-primary" onClick={closeAvatarModal}>
-                Done
+                Concluir
               </button>
             </div>
           </div>

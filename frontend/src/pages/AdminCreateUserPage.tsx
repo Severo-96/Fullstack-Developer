@@ -26,20 +26,20 @@ const AdminCreateUserPage = () => {
   return (
     <AccountForm
       mode="register"
-      title="Create user"
-      subtitle="Provide details for the new user account."
+      title="Criar usuário"
+      subtitle="Informe os dados para a nova conta de usuário."
       initialValues={{
         fullName: '',
         email: '',
         avatarUrl: null,
         role: 'non_admin'
       }}
-      submitLabel="Create user"
-      pendingLabel="Creating user..."
+      submitLabel="Criar usuário"
+      pendingLabel="Criando usuário..."
       enableRoleSelection
       onSubmit={handleSubmit}
       backButton={{
-        label: 'Back to dashboard',
+        label: 'Voltar para o painel',
         onClick: () => navigate('/admin')
       }}
     />

@@ -6,7 +6,12 @@ import { afterEach, beforeEach, vi } from 'vitest';
 const originalError = console.error;
 const originalWarn = console.warn;
 
-const suppressedErrorPatterns = [/not wrapped in act/, /Failed to refresh current user/];
+const suppressedErrorPatterns = [
+  /not wrapped in act/,
+  /Failed to refresh current user/,
+  /Falha ao atualizar o usuário atual/,
+  /Falha ao restaurar a sessão/
+];
 const suppressedWarnPatterns = [/React Router Future Flag Warning/];
 
 let errorSpy: ReturnType<typeof vi.spyOn<typeof console, 'error'>> | null = null;

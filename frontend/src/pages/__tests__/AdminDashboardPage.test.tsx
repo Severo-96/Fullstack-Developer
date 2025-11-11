@@ -111,8 +111,8 @@ describe('AdminDashboardPage', () => {
     await waitFor(() => expect(fetchUsersMock).toHaveBeenCalledTimes(1));
 
     expect(screen.getByTestId('user-table')).toHaveTextContent('User Page 1');
-    expect(screen.getByText(/Page 1 of 3/i)).toBeInTheDocument();
-    expect(screen.getByText(/25 total/)).toBeInTheDocument();
+    expect(screen.getByText(/Página 1 de 3/i)).toBeInTheDocument();
+    expect(screen.getByText(/25 no total/)).toBeInTheDocument();
   });
 
   it('requests next page when clicking Next', async () => {
@@ -128,7 +128,7 @@ describe('AdminDashboardPage', () => {
 
     const user = userEvent.setup();
 
-    await user.click(screen.getByRole('button', { name: /next/i }));
+    await user.click(screen.getByRole('button', { name: /próxima/i }));
 
     await waitFor(() => expect(fetchUsersMock).toHaveBeenCalledTimes(2));
     const [secondCallArgs] = fetchUsersMock.mock.calls[1];

@@ -23,7 +23,7 @@ const LoginPage = () => {
     event.preventDefault();
 
     if (!isValidEmail(email) || password.length === 0) {
-      setError('Please provide a valid email and password');
+      setError('Informe um e-mail válido e a senha');
       return;
     }
 
@@ -35,7 +35,7 @@ const LoginPage = () => {
       navigate(user.role === 'admin' ? '/admin' : '/profile', { replace: true });
     } catch (exception) {
       setError(
-        exception instanceof Error ? exception.message : 'Login failed. Try again.'
+        exception instanceof Error ? exception.message : 'Falha no login. Tente novamente.'
       );
       setSubmitting(false);
     }
@@ -46,9 +46,9 @@ const LoginPage = () => {
       <div className="col-md-6">
         <div className="card shadow-sm border-0">
           <div className="card-body p-4">
-            <h1 className="h3 mb-3 text-center">Welcome back</h1>
+            <h1 className="h3 mb-3 text-center">Bem-vindo de volta</h1>
             <p className="text-muted text-center mb-4">
-              Sign in to access your dashboard
+              Entre para acessar o painel
             </p>
 
             {error && (
@@ -60,7 +60,7 @@ const LoginPage = () => {
             <form onSubmit={handleSubmit} noValidate>
               <div className="mb-3">
                 <label htmlFor="login-email" className="form-label">
-                  Email address
+                  E-mail
                 </label>
                 <input
                   id="login-email"
@@ -75,7 +75,7 @@ const LoginPage = () => {
 
               <div className="mb-3">
                 <label htmlFor="login-password" className="form-label">
-                  Password
+                  Senha
                 </label>
                 <input
                   id="login-password"
@@ -95,13 +95,13 @@ const LoginPage = () => {
                   className="btn btn-primary"
                   disabled={submitting}
                 >
-                  {submitting ? 'Signing in...' : 'Sign in'}
+                  {submitting ? 'Entrando...' : 'Entrar'}
                 </button>
               </div>
             </form>
 
             <p className="mt-3 mb-0 text-center text-muted">
-              New here? <Link to="/register">Create an account</Link>
+              Novo por aqui? <Link to="/register">Criar uma conta</Link>
             </p>
           </div>
         </div>

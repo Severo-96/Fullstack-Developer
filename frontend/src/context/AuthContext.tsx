@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const currentUser = await fetchCurrentUser();
         setUser(currentUser);
       } catch (error) {
-        console.error('Failed to restore session', error);
+        console.error('Falha ao restaurar a sessão', error);
         handleClearSession();
       } finally {
         setIsLoading(false);
@@ -122,7 +122,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(currentUser);
       return currentUser;
     } catch (error) {
-      console.error('Failed to refresh current user', error);
+      console.error('Falha ao atualizar o usuário atual', error);
       handleClearSession();
       return null;
     }

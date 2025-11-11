@@ -16,7 +16,7 @@ const ProtectedRoute = ({
   const { isLoading, isAuthenticated, isAdmin } = useAuth();
 
   if (isLoading) {
-    return <LoadingState message="Loading session..." />;
+    return <LoadingState message="Carregando sessão..." />;
   }
 
   if (!isAuthenticated) {

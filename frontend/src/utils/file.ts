@@ -5,7 +5,7 @@ export async function fetchImageAsFile(
   const response = await fetch(url);
 
   if (!response.ok) {
-    throw new Error(`Unable to fetch image from ${url}`);
+    throw new Error(`Não foi possível buscar a imagem de ${url}`);
   }
 
   const blob = await response.blob();

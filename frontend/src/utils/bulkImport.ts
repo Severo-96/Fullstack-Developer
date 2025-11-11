@@ -21,7 +21,7 @@ export function deriveBulkImportState(
         total: message.total ?? 0,
         failed: message.failed ?? 0,
         errors: message.errors || [],
-        message: 'Queued for processing',
+        message: 'Na fila para processamento',
         lastEvent: message.event
       };
     case 'started':
@@ -33,7 +33,7 @@ export function deriveBulkImportState(
         total: message.total ?? previous.total,
         failed: message.failed ?? previous.failed,
         errors: message.errors || [],
-        message: 'Processing',
+        message: 'Processando',
         lastEvent: message.event
       };
     case 'progress':
@@ -58,7 +58,7 @@ export function deriveBulkImportState(
           ...(previous.errors ?? []),
           ...(message.errors ?? []),
           ...(message.row_data
-            ? [{ row: message.row_data, error: message.error ?? 'Unknown' }]
+            ? [{ row: message.row_data, error: message.error ?? 'Desconhecido' }]
             : [])
         ],
         lastEvent: message.event
@@ -73,8 +73,8 @@ export function deriveBulkImportState(
         errors: message.errors || [],
         message:
           (message.failed ?? previous.failed ?? 0) > 0
-            ? 'Import completed'
-            : 'Import completed successfully',
+            ? 'Importação concluída'
+            : 'Importação concluída com sucesso',
         lastEvent: message.event
       };
     case 'failed':
@@ -85,7 +85,7 @@ export function deriveBulkImportState(
         total: message.total ?? previous.total,
         failed: message.failed ?? previous.failed,
         errors: message.errors || [],
-        message: message.message ?? 'Import failed',
+        message: message.message ?? 'Falha na importação',
         lastEvent: message.event
       };
     default:

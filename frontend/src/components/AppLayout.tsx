@@ -16,7 +16,7 @@ const AppLayout = ({ children }: PropsWithChildren) => {
       <nav className="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
         <div className="container">
           <Link to="/" className="navbar-brand">
-            Umanni Users
+            Usuários Umanni
           </Link>
 
           <button
@@ -26,7 +26,7 @@ const AppLayout = ({ children }: PropsWithChildren) => {
             data-bs-target="#navbarNav"
             aria-controls="navbarNav"
             aria-expanded="false"
-            aria-label="Toggle navigation"
+            aria-label="Alternar navegação"
           >
             <span className="navbar-toggler-icon"></span>
           </button>
@@ -35,12 +35,12 @@ const AppLayout = ({ children }: PropsWithChildren) => {
             <div className="d-flex align-items-center gap-2 me-auto mb-2 mb-lg-0">
               {isAuthenticated && isAdmin && (
                 <Link className="btn btn-outline-light btn-sm" to="/admin">
-                  Dashboard
+                  Painel
                 </Link>
               )}
               {isAuthenticated && (
                 <Link className="btn btn-outline-light btn-sm" to="/profile">
-                  Profile
+                  Perfil
                 </Link>
               )}
             </div>
@@ -57,15 +57,15 @@ const AppLayout = ({ children }: PropsWithChildren) => {
                   className="btn btn-outline-light btn-sm"
                   onClick={handleLogout}
                 >
-                  Logout
+                  Sair
                 </button>
               ) : (
                 <div className="d-flex gap-2">
                   <Link to="/login" className="btn btn-outline-light btn-sm">
-                    Login
+                    Entrar
                   </Link>
                   <Link to="/register" className="btn btn-light btn-sm">
-                    Register
+                    Cadastrar
                   </Link>
                 </div>
               )}

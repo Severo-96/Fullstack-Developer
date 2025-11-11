@@ -2,7 +2,7 @@ interface LoadingStateProps {
   message?: string;
 }
 
-const LoadingState = ({ message = 'Loading...' }: LoadingStateProps) => (
+const LoadingState = ({ message = 'Carregando...' }: LoadingStateProps) => (
   <div className="d-flex justify-content-center align-items-center py-5">
     <div className="text-center">
       <div className="spinner-border text-primary mb-3" role="status" />

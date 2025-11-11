@@ -9,7 +9,7 @@ class ApplicationController < ActionController::API
   private
 
   def render_unprocessable_entity(e)
-    render json: { error: 'Failed to process user', details: e.message }, status: :unprocessable_content
+    render json: { error: 'Failed to process user', details: e.record.errors.full_messages }, status: :unprocessable_content
   end
 
   def render_not_found
@@ -17,6 +17,7 @@ class ApplicationController < ActionController::API
   end
 
   def render_missing_parameter(e)
-    render json: { error: 'Missing parameter', details: e.message }, status: :bad_request
+    missing_keys = e.param.to_s.split(',').map(&:strip)
+    render json: { error: 'Missing parameter', details: missing_keys }, status: :bad_request
   end
 end

@@ -67,7 +67,7 @@ describe('deriveBulkImportState', () => {
     });
 
     expect(failed.status).toBe('failed');
-    expect(failed.message).toBe('Import failed');
+    expect(failed.message).toBe('Falha na importação');
   });
 });
 

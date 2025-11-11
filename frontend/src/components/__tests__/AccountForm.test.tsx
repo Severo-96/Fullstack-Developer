@@ -10,23 +10,23 @@ describe('AccountForm', () => {
     render(
       <AccountForm
         mode="register"
-        title="Register"
-        subtitle="Create account"
+        title="Criar conta"
+        subtitle="Preencha os dados para se cadastrar"
         initialValues={{ fullName: '', email: '', avatarUrl: null }}
-        submitLabel="Create"
-        pendingLabel="Creating..."
+        submitLabel="Criar conta"
+        pendingLabel="Criando..."
         onSubmit={onSubmit}
       />
     );
 
     const user = userEvent.setup();
 
-    await user.type(screen.getByLabelText(/full name/i), 'Alice Example');
-    await user.type(screen.getByLabelText(/^email/i), 'alice@example.com');
-    await user.type(screen.getByLabelText(/^password$/i), 'password123');
-    await user.type(screen.getByLabelText(/confirm password/i), 'password123');
+    await user.type(screen.getByLabelText(/nome completo/i), 'Alice Example');
+    await user.type(screen.getByLabelText(/^e-mail/i), 'alice@example.com');
+    await user.type(screen.getByLabelText(/^senha$/i), 'password123');
+    await user.type(screen.getByLabelText(/confirmar senha/i), 'password123');
 
-    const submitButton = screen.getByRole('button', { name: /create/i });
+    const submitButton = screen.getByRole('button', { name: /criar conta/i });
     expect(submitButton).not.toBeDisabled();
 
     await user.click(submitButton);
@@ -48,27 +48,27 @@ describe('AccountForm', () => {
     render(
       <AccountForm
         mode="register"
-        title="Register"
-        subtitle="Create account"
+        title="Criar conta"
+        subtitle="Preencha os dados para se cadastrar"
         initialValues={{ fullName: '', email: '', avatarUrl: null }}
-        submitLabel="Create"
-        pendingLabel="Creating..."
+        submitLabel="Criar conta"
+        pendingLabel="Criando..."
         onSubmit={onSubmit}
       />
     );
 
     const user = userEvent.setup();
 
-    await user.type(screen.getByLabelText(/full name/i), 'Bob');
-    await user.type(screen.getByLabelText(/^email/i), 'bob@example.com');
-    await user.type(screen.getByLabelText(/^password$/i), 'password123');
-    await user.type(screen.getByLabelText(/confirm password/i), 'different');
+    await user.type(screen.getByLabelText(/nome completo/i), 'Bob');
+    await user.type(screen.getByLabelText(/^e-mail/i), 'bob@example.com');
+    await user.type(screen.getByLabelText(/^senha$/i), 'password123');
+    await user.type(screen.getByLabelText(/confirmar senha/i), 'different');
 
-    await user.click(screen.getByRole('button', { name: /create/i }));
+    await user.click(screen.getByRole('button', { name: /criar conta/i }));
 
     expect(onSubmit).not.toHaveBeenCalled();
     expect(await screen.findByRole('alert')).toHaveTextContent(
-      'Passwords do not match'
+      'As senhas não coincidem'
     );
   });
 
@@ -78,27 +78,27 @@ describe('AccountForm', () => {
     render(
       <AccountForm
         mode="edit"
-        title="Edit"
-        subtitle="Edit account"
+        title="Editar usuário"
+        subtitle="Atualize os dados da conta"
         initialValues={{
           fullName: 'Existing',
           email: 'existing@example.com',
           avatarUrl: null,
           role: 'admin'
         }}
-        submitLabel="Save"
-        pendingLabel="Saving..."
+        submitLabel="Salvar"
+        pendingLabel="Salvando..."
         enableRoleSelection
         onSubmit={onSubmit}
       />
     );
 
     const user = userEvent.setup();
-    const select = screen.getByLabelText(/role/i);
+    const select = screen.getByLabelText(/função/i);
     expect(select).toHaveValue('admin');
 
     await user.selectOptions(select, 'non_admin');
-    await user.click(screen.getByRole('button', { name: /save/i }));
+    await user.click(screen.getByRole('button', { name: /salvar/i }));
 
     expect(onSubmit).toHaveBeenCalledWith(
       expect.objectContaining({

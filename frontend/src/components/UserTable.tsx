@@ -20,7 +20,7 @@ const UserTable = ({
   if (users.length === 0) {
     return (
       <div className="alert alert-secondary" role="alert">
-        No users created yet.
+        Nenhum usuário criado ainda.
       </div>
     );
   }
@@ -41,11 +41,11 @@ const UserTable = ({
         <thead className="table-light">
           <tr>
             <th scope="col">Avatar</th>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Role</th>
+            <th scope="col">Nome</th>
+            <th scope="col">E-mail</th>
+            <th scope="col">Função</th>
             <th scope="col" className="text-end">
-              Actions
+              Ações
             </th>
           </tr>
         </thead>
@@ -77,13 +77,13 @@ const UserTable = ({
                       user.role === 'admin' ? 'bg-primary' : 'bg-secondary'
                     }`}
                   >
-                    {user.role === 'admin' ? 'Admin' : 'User'}
+                    {user.role === 'admin' ? 'Administrador' : 'Usuário'}
                   </span>
                 </td>
                 <td className="text-end">
                   {isCurrent ? (
                     <span className="badge bg-light text-dark border">
-                      Your account
+                      Sua conta
                     </span>
                   ) : (
                     <div className="btn-group btn-group-sm" role="group">
@@ -92,21 +92,21 @@ const UserTable = ({
                         className="btn btn-outline-primary"
                         onClick={() => onEdit(user)}
                       >
-                        Edit
+                        Editar
                       </button>
                       <button
                         type="button"
                         className="btn btn-outline-secondary"
                         onClick={() => handleToggleClick(user)}
                       >
-                        {user.role === 'admin' ? 'Make User' : 'Make Admin'}
+                        {user.role === 'admin' ? 'Tornar usuário' : 'Tornar administrador'}
                       </button>
                       <button
                         type="button"
                         className="btn btn-outline-danger"
                         onClick={() => onDelete(user)}
                       >
-                        Delete
+                        Excluir
                       </button>
                     </div>
                   )}

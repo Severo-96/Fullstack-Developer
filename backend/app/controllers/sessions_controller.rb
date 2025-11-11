@@ -17,8 +17,6 @@ class SessionsController < ApplicationController
 
     token = JwtService.new.generate_token(user)
     render json: { token: }, status: :created
-  rescue ActiveRecord::RecordInvalid => e
-    render json: { errors: e.record.errors.full_messages }, status: :unprocessable_content
   end
 
   private

@@ -8,7 +8,7 @@ const ProfileEditPage = () => {
   const { user, updateProfile, refreshCurrentUser, isLoading } = useAuth();
 
   if (isLoading || !user) {
-    return <LoadingState message="Loading profile..." />;
+    return <LoadingState message="Carregando perfil..." />;
   }
 
   const handleSubmit = async ({
@@ -32,18 +32,18 @@ const ProfileEditPage = () => {
   return (
     <AccountForm
       mode="edit"
-      title="Edit your profile"
-      subtitle="Update your personal information and profile photo."
+      title="Edite seu perfil"
+      subtitle="Atualize suas informações pessoais e a foto de perfil."
       initialValues={{
         fullName: user.full_name,
         email: user.email,
         avatarUrl: user.avatar_image_url
       }}
-      submitLabel="Save changes"
-      pendingLabel="Saving..."
+      submitLabel="Salvar alterações"
+      pendingLabel="Salvando..."
       onSubmit={handleSubmit}
       backButton={{
-        label: 'Back',
+        label: 'Voltar',
         onClick: () => navigate('/profile')
       }}
     />

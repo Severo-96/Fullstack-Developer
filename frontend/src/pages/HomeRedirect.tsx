@@ -6,7 +6,7 @@ const HomeRedirect = () => {
   const { isAuthenticated, isAdmin, isLoading } = useAuth();
 
   if (isLoading) {
-    return <LoadingState message="Checking session..." />;
+    return <LoadingState message="Verificando sessão..." />;
   }
 
   if (!isAuthenticated) {

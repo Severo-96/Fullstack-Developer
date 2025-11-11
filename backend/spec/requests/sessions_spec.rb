@@ -48,8 +48,9 @@ RSpec.describe 'Sessions', type: :request do
 
       expect(response).to have_http_status(:unprocessable_content)
       payload = JSON.parse(response.body, symbolize_names: true)
-      expect(payload[:errors]).to be_an(Array)
-      expect(payload[:errors]).not_to be_empty
+      expect(payload[:error]).to eq('Failed to process user')
+      expect(payload[:details]).to be_an(Array)
+      expect(payload[:details]).to include("Full name can't be blank", "Email can't be blank", "Password can't be blank")
     end
 
     it 'returns errors when email is already taken' do
@@ -57,7 +58,9 @@ RSpec.describe 'Sessions', type: :request do
 
       expect(response).to have_http_status(:unprocessable_content)
       payload = JSON.parse(response.body, symbolize_names: true)
-      expect(payload[:errors]).to include('Email has already been taken')
+      expect(payload[:error]).to eq('Failed to process user')
+      expect(payload[:details]).to be_an(Array)
+      expect(payload[:details]).to eq(['Email has already been taken'])
     end
   end
 end
