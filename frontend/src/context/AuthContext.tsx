@@ -37,7 +37,6 @@ interface AuthContextValue {
     email?: string;
     password?: string;
     avatarFile?: File | null;
-    avatarUrl?: string;
   }) => Promise<User>;
   deleteAccount: () => Promise<void>;
 }
@@ -102,7 +101,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const register = useCallback(
     async (payload: RegisterPayload) => {
-      const { token: newToken } = await registerRequest(payload);
+      const newToken = await registerRequest(payload);
       persistToken(newToken);
       const currentUser = await fetchCurrentUser();
       setUser(currentUser);
@@ -135,7 +134,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       email?: string;
       password?: string;
       avatarFile?: File | null;
-      avatarUrl?: string;
     }) => {
       const updatedUser = await updateProfileRequest(payload);
       setUser(updatedUser);

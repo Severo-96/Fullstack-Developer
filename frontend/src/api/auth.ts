@@ -11,7 +11,6 @@ export interface RegisterPayload {
   email: string;
   password: string;
   avatarFile?: File | null;
-  avatarUrl?: string;
 }
 
 interface TokenResponse {
@@ -30,12 +29,12 @@ export const login = async (payload: LoginPayload) => {
 
 export const register = async (payload: RegisterPayload) => {
   const formData = await buildRegisterFormData(payload);
-  const response = await request<TokenResponse & { user: User }>('/register', {
+  const response = await request<TokenResponse>('/register', {
     method: 'POST',
     body: formData,
     skipAuth: true
   } as RequestOptions);
-  return response;
+  return response.token;
 };
 
 export const fetchCurrentUser = () =>
@@ -48,7 +47,6 @@ interface UpdateProfilePayload {
   email?: string;
   password?: string;
   avatarFile?: File | null;
-  avatarUrl?: string;
 }
 
 export const updateProfile = async (payload: UpdateProfilePayload) => {

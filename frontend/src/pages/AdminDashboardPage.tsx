@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import LoadingState from '@/components/LoadingState';
@@ -7,12 +7,7 @@ import UserTable from '@/components/UserTable';
 import BulkImportProgress, {
   BulkImportState
 } from '@/components/BulkImportProgress';
-import {
-  bulkCreateUsers,
-  deleteUser,
-  fetchUsers,
-  updateUser
-} from '@/api/users';
+import { bulkCreateUsers, deleteUser, fetchUsers, updateUser, UsersPagination } from '@/api/users';
 import type { User, UsersCountSnapshot } from '@/types/user';
 import type { BulkImportMessage } from '@/types/import';
 import {
@@ -34,14 +29,18 @@ const AdminDashboardPage = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
   const [counts, setCounts] = useState<UsersCountSnapshot | null>(null);
+  const [pagination, setPagination] = useState<UsersPagination | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(20);
 
   const [importFile, setImportFile] = useState<File | null>(null);
   const [bulkImportState, setBulkImportState] = useState<BulkImportState>(
     initialBulkImportState
   );
   const bulkImportSubscriptionRef = useRef<any>(null);
+  const isInitialLoadRef = useRef(true);
 
   const [pendingRoleChange, setPendingRoleChange] =
     useState<RoleChangeState>(null);
@@ -51,28 +50,61 @@ const AdminDashboardPage = () => {
     [user?.id]
   );
 
-  useEffect(() => {
-    const load = async () => {
-      setLoading(true);
-      setError(null);
+  const loadUsers = useCallback(
+    async (options?: { suppressLoading?: boolean }) => {
+      const showLoading = !options?.suppressLoading;
+
+      if (showLoading) {
+        setLoading(true);
+        setError(null);
+      }
+
       try {
-        const { users: fetchedUsers, counts: fetchedCounts } =
-          await fetchUsers();
+        const {
+          users: fetchedUsers,
+          counts: fetchedCounts,
+          pagination: fetchedPagination
+        } = await fetchUsers({ page, perPage });
+
+        const safeTotalPages = Math.max(fetchedPagination.totalPages, 1);
+        const adjustedPagination: UsersPagination = {
+          ...fetchedPagination,
+          totalPages: safeTotalPages,
+          page: Math.min(fetchedPagination.page, safeTotalPages)
+        };
+
         setUsers(fetchedUsers);
         setCounts(fetchedCounts);
+        setPagination(adjustedPagination);
+
+        if (page > safeTotalPages) {
+          setPage(safeTotalPages);
+        }
       } catch (exception) {
-        setError(
-          exception instanceof Error
-            ? exception.message
-            : 'Unable to load users'
-        );
+        const message =
+          exception instanceof Error ? exception.message : 'Unable to load users';
+        setError(message);
+        if (options?.suppressLoading) {
+          console.error(message, exception);
+        }
       } finally {
-        setLoading(false);
+        if (showLoading) {
+          setLoading(false);
+        }
       }
-    };
+    },
+    [page, perPage]
+  );
 
-    void load();
+  useEffect(() => {
+    const suppressLoading = !isInitialLoadRef.current;
+    void loadUsers({ suppressLoading });
+    if (isInitialLoadRef.current) {
+      isInitialLoadRef.current = false;
+    }
+  }, [loadUsers]);
 
+  useEffect(() => {
     return () => {
       bulkImportSubscriptionRef.current?.unsubscribe();
       disconnectConsumer();
@@ -100,13 +132,32 @@ const AdminDashboardPage = () => {
     };
   }, [token]);
 
-  const refreshUsers = async () => {
-    try {
-      const { users: fetchedUsers, counts: fetchedCounts } = await fetchUsers();
-      setUsers(fetchedUsers);
-      setCounts(fetchedCounts);
-    } catch (exception) {
-      console.error('Failed to refresh users', exception);
+  const refreshUsers = useCallback(async () => {
+    await loadUsers({ suppressLoading: true });
+  }, [loadUsers]);
+
+  const effectiveTotalPages = pagination ? Math.max(pagination.totalPages, 1) : 1;
+  const currentPageDisplay = Math.min(page, effectiveTotalPages);
+  const pageStart =
+    pagination && pagination.totalCount > 0
+      ? (currentPageDisplay - 1) * pagination.perPage + 1
+      : 0;
+  const pageEnd =
+    pagination && pagination.totalCount > 0
+      ? Math.min(pageStart + pagination.perPage - 1, pagination.totalCount)
+      : 0;
+
+  const handlePerPageChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const nextValue = Number(event.target.value);
+    if (Number.isNaN(nextValue) || nextValue <= 0) return;
+    setPerPage(nextValue);
+    setPage(1);
+  };
+
+  const handlePageChange = (nextPage: number) => {
+    const safePage = Math.max(1, Math.min(nextPage, effectiveTotalPages));
+    if (safePage !== page) {
+      setPage(safePage);
     }
   };
 
@@ -301,7 +352,7 @@ const AdminDashboardPage = () => {
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h2 className="h5 mb-0">All users</h2>
             <span className="badge bg-light text-dark border">
-              {users.length} total
+              {pagination?.totalCount ?? counts?.total ?? users.length} total
             </span>
           </div>
           <UserTable
@@ -319,6 +370,58 @@ const AdminDashboardPage = () => {
             }}
             currentUserId={user?.id ?? null}
           />
+          {pagination && (
+            <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mt-3">
+              <div className="d-flex align-items-center gap-2">
+                <span className="text-muted small">Rows per page:</span>
+                <select
+                  className="form-select form-select-sm"
+                  style={{ width: 'auto' }}
+                  value={perPage}
+                  onChange={handlePerPageChange}
+                >
+                  {[10, 20, 50, 100].map((value) => (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="d-flex flex-column flex-sm-row align-items-sm-center gap-2">
+                {pagination.totalCount > 0 && (
+                  <span className="text-muted small">
+                    Showing {pageStart}-{pageEnd} of {pagination.totalCount}
+                  </span>
+                )}
+                <div className="d-flex align-items-center gap-2">
+                  <span className="text-muted small">
+                    Page {currentPageDisplay} of {effectiveTotalPages}
+                  </span>
+                  <div className="btn-group" role="group" aria-label="Pagination controls">
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary btn-sm"
+                      onClick={() => handlePageChange(currentPageDisplay - 1)}
+                      disabled={currentPageDisplay <= 1}
+                    >
+                      Previous
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary btn-sm"
+                      onClick={() => handlePageChange(currentPageDisplay + 1)}
+                      disabled={
+                        pagination.totalCount === 0 ||
+                        currentPageDisplay >= effectiveTotalPages
+                      }
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
       {pendingRoleChange && (

@@ -17,8 +17,7 @@ const AdminCreateUserPage = () => {
       email,
       password: password || '',
       role,
-      avatar_image: avatarFile ?? null,
-      avatarUrl: undefined
+      avatar_image: avatarFile ?? null
     });
 
     navigate('/admin', { replace: true });

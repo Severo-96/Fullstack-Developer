@@ -49,8 +49,7 @@ const AdminEditUserPage = () => {
       email,
       password,
       role,
-      avatar_image: avatarFile ?? undefined,
-      avatarUrl: undefined
+      avatar_image: avatarFile ?? undefined
     });
 
     navigate('/admin', { replace: true });
